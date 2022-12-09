@@ -1,8 +1,8 @@
 # smrs_popn_dist
 
 This repository contains code to demonstrate:- 
-1. Summarising an individual-level participant data (IPD) dataset - [Scripts/01_summarise_ipd.R]
-2. Simulating an IPD dataset from summaries - [Scripts/02_simulate_popn.R]
+1. Summarising an individual-level participant data (IPD) dataset - [/Scripts/01_summarise_ipd.R]
+2. Simulating an IPD dataset from summaries - [/Scripts/02_simulate_popn.R]
 
 The two scripts are complementary.
 01. Starts with an IPD dataset [Data/fake_ipd.csv] and summarises this (see [Outputs/])
@@ -12,7 +12,7 @@ The two scripts are complementary.
 
 For continuous variables, each variable is converted to a standard normal distribution using ordered quantile normalisation. See the [bestNormalize package vignette](https://cran.r-project.org/web/packages/bestNormalize/vignettes/bestNormalize.html) for details.
 
-The code stores a set of original values and corresponding transformed values to allow subsequent "back-transformation" (ie recovery) of the original values [Outputs/quantiles_to_untransform.csv]. The algorithm for back transformation is non-parametric; it uses the observed relationship between the original and normalised variable. Where any values requiring to be back-transformed are not present in this set of values the relationship is obtained by simple linear interpolation (via the `approx()` function in R). Therefore, in order to obtain a set of values which capture the relationship in the fewest number of data points, we used the  Ramer–Douglas–Peucker (RDP) algorithm. The RDP algorithm was designed to reduce the number of points needed represent a polygon, and so could be used to represent the curve describing the relationship between the original and normalised values with fewer points. This algorithm trades off error (in the form of deviations from the curve) against the required number number of points. We ran a simple loop (`while()` function in R) to obtain a level of error wherein the curve was represented by 10 or fewer points per variable.
+The code stores a set of original values and corresponding transformed values to allow subsequent "back-transformation" (ie recovery) of the original values [/Outputs/quantiles_to_untransform.csv]. The algorithm for back transformation is non-parametric; it uses the observed relationship between the original and normalised variable. Where any values requiring to be back-transformed are not present in this set of values the relationship is obtained by simple linear interpolation (via the `approx()` function in R). Therefore, in order to obtain a set of values which capture the relationship in the fewest number of data points, we used the  Ramer–Douglas–Peucker (RDP) algorithm. The RDP algorithm was designed to reduce the number of points needed represent a polygon, and so could be used to represent the curve describing the relationship between the original and normalised values with fewer points. This algorithm trades off error (in the form of deviations from the curve) against the required number number of points. We ran a simple loop (`while()` function in R) to obtain a level of error wherein the curve was represented by 10 or fewer points per variable.
 
 ## Summarisation step
 
