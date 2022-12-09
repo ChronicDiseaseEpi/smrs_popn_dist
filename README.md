@@ -1,7 +1,7 @@
 # smrs_popn_dist
 
 This repository contains code to demonstrate:- 
-1. Summarising an individual-level participant data (IPD) dataset - [/Scripts/01_summarise_ipd.R]
+1. Summarising an individual-level participant data (IPD) dataset - (Scripts/01_summarise_ipd.R)[/Scripts/01_summarise_ipd.R]
 2. Simulating an IPD dataset from summaries - [/Scripts/02_simulate_popn.R]
 
 The two scripts are complementary.
