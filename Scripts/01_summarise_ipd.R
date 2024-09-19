@@ -1,6 +1,7 @@
 library(tidyr)
 library(dplyr)
 library(purrr)
+library(ggplot2)
 library(stringr)
 library(readr)
 library(RDP)
@@ -9,12 +10,18 @@ source("Scripts/ordernorm.R")
 
 ## Read in IPD
 targetpop <- read_csv("Data/fake_ipd.csv")
-
+# targetpop <- targetpop %>% 
+#   mutate(cardio = if_else(cvd == 1L, sample(size = nrow(.), 0:1, replace = TRUE), 0),
+#          cerebr = if_else(cvd == 1 & cardio == 0, sample(size = nrow(.), 0:1, replace = TRUE), 0),
+#          periph = cvd - cardio - cerebr)
+# targetpop <- targetpop %>% 
+#   select(-cvd)
+write_csv(targetpop, "Data/fake_ipd.csv")
 # list names of continuous and categorical variables
 contvar <- c("age", "durn", "sbp", "dbp", "hba1c", "tchol", 
              "hdl", "egfr", "bmi", "ht")
 catvar <- c("gndr", "ethnic", "insulin", "noninsulin", "metformin", "hf", 
-            "cvd", "cursmok")
+            "cardio", "cerebr", "periph", "cursmok")
 
 ## create lookup table between unique combination of categorical variables and id
 catlkp <- targetpop[, catvar] %>% 
