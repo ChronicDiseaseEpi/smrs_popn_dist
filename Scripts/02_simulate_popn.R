@@ -8,12 +8,17 @@ library(MASS)
 library(Matrix)
 
 ## read in summary data  ----
-catunq <- read_csv("Outputs/unique_comb_categorical_variables_count.csv")
-catlkp <- read_csv("Outputs/unique_comb_categorical_variables_lkp.csv")
-trgt_smry_con <- read_csv("Outputs/continuous_variables_mean_sd.csv")
-trgt_smry_cor <- read_csv("Outputs/continuous_variables_cor.csv")
-smry_cor <- read_csv("Outputs/summary_correlations_continuous.csv")
-quants <- read_csv("Outputs/quantiles_to_untransform.csv")
+catunq <- read_csv("Outputs/c/unique_comb_categorical_variables_count.csv")
+catlkp <- read_csv("Outputs/c/unique_comb_categorical_variables_lkp.csv")
+trgt_smry_con <- read_csv("Outputs/c/continuous_variables_mean_sd.csv")
+trgt_smry_cor <- read_csv("Outputs/c/continuous_variables_cor.csv")
+smry_cor <- read_csv("Outputs/c/summary_correlations_continuous.csv")
+quants <- read_csv("Outputs/c/quantiles_to_untransform.csv")
+
+## where correlations missing take mean for that comparison across categoricals
+## Later on when get correct code calculate weighted mean.
+trgt_smry_cor <- trgt_smry_cor %>% 
+  mutate(across(-unq_id, ~ if_else(is.na(.x), mean(.x, na.rm=TRUE), .x)))
 
 ## rename quants so matches transformed variable
 quants <- quants %>% 
@@ -113,7 +118,7 @@ for (varname in unique(quants$varname)) {
          xout = cont_siml[[varname]], rule = 1)$y
 }
 
-## joing back to categorical data
+## joining back to categorical data
 siml_data <- catlkp %>% 
   inner_join(cont_siml) %>% 
   dplyr::select(-n, -unq_id)
