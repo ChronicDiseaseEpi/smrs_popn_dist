@@ -339,3 +339,9 @@ Tform <- function(mydf, varnames = c("egfr", "hba1c"), probs =  seq(0, 1, 0.001)
 }
 
 
+GetCatVar <- function(v, nunq = 10) {
+  ## identify if numerical variable is categorical
+  x <- unique(v)
+  length(x) - sum(is.na(x)) <= nunq
+}
+
