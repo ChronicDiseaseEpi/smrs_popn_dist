@@ -15,6 +15,16 @@ targetpop <- read_csv("Data/fake_ipd_novarnames.csv", guess_max = 1E8)
 cls <- map_chr(targetpop, ~ class(.x)[1])
 ## variables read-in as categorical/binary (ie factor, logical or character)
 charvar <- names(targetpop)[cls %in% c("character", "logical", "factor")]
+## give a warning if there are any character variables with more than 10 levels
+charvarlarge <- map_int(targetpop[, charvar], ~{
+  v <- unique(.x)
+  length(v) - sum(is.na(v))
+})
+if (any(charvarlarge >= 11)) warning(paste(
+  "The following variable(s): ",
+  paste(charvarlarge[charvarlarge>=11], collapse = " "),
+  " have more than 10 levels."))
+
 ## variables that are categorical but coded using numbers (eg 0/1 or 1, 2, 3)
 charstatus <- map2_chr(names(targetpop), targetpop, ~ {
   if(.x %in% charvar) return("categorical")
@@ -25,6 +35,7 @@ catvar <- names(targetpop)[charstatus == "categorical"]
 if (! all(charstatus %in% c("categorical", "numerical"))) {
   warning("Some variables not assigned to categorical or numerical")
 }
+rm(charvar, charvarlarge)
 
 ## create lookup table between unique combination of categorical variables and id
 catlkp <- targetpop[, catvar] %>% 
